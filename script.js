@@ -1,5 +1,8 @@
 // github user finder example
 
+    var xmlhttp = new XMLHttpRequest();
+
+
 $(document).ready(function() {
     $(document).on("keypress", "#username", function() {
         // checks if the key is [return]
@@ -11,14 +14,16 @@ $(document).ready(function() {
             console.log("username is: " + username);
         }
     });
+    getGithubInfo();
+    showUser();
 });
 
 function getGithubInfo(username) {
     var url = "https://api.github.com/users/" + username;
 
-    var xmlhttp = new XMLHttpRequest();
+    // var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("GET", url, false); // false will run a request synchronously - the browser will wait for the call the Github API
-    xml.send();
+    xmlhttp.send();
 
     var data = xmlhttp.responseText;
 
@@ -32,6 +37,8 @@ function showUser(xmlhttp) {
     if (xmlhttp.status === 200) {
         console.log("Status 200");
         // show the user details
+        var json = xmlhttp.responseText;
+        var user = JSON.parse(json);
     } else {
         // throw an error
     }
