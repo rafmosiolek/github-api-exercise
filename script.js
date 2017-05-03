@@ -1,45 +1,94 @@
 // github user finder example
 
-    var xmlhttp = new XMLHttpRequest();
-
-
 $(document).ready(function() {
-    $(document).on("keypress", "#username", function() {
-        // checks if the key is [return]
-        if (event.which === 13) {
-            console.log("enter pressed");
-            var input = $(this);
-            var username = input.val(); // get the value from the input element
+  $(document).on('keypress', '#username', function() {
+    if (event.which === 13) { // check the key was <enter>
+        var input = $(this);
+        var username = input.val();
+        var xmlhttp = getGithubInfo(username);
 
-            console.log("username is: " + username);
-        }
-    });
-    getGithubInfo();
-    showUser();
+        showUser(xmlhttp);
+
+      console.log('username was: ' + username);
+    }
+
+  });
+
 });
 
 function getGithubInfo(username) {
-    var url = "https://api.github.com/users/" + username;
+  var url = 'https://api.github.com/users/' + username;
 
-    // var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("GET", url, false); // false will run a request synchronously - the browser will wait for the call the Github API
-    xmlhttp.send();
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.open('GET', url, false);
+  xmlhttp.send();
 
-    var data = xmlhttp.responseText;
+  var data = xmlhttp.responseText;
 
-    console.log(data);
 
+  console.log(data);
     return xmlhttp;
 }
 
 function showUser(xmlhttp) {
-    // checks if the status code is 200 (OK)
-    if (xmlhttp.status === 200) {
-        console.log("Status 200");
-        // show the user details
+     var profile = document.querySelector("#profile h2");
+             var info = document.querySelector("#profile .information");
+                 var image = document.querySelector("#profile .avatar");
+
+
+  if(xmlhttp.status === 200) {
         var json = xmlhttp.responseText;
         var user = JSON.parse(json);
-    } else {
-        // throw an error
-    }
+
+
+        profile.innerHTML = user.login + " is GitHub user #" + user.id;
+
+
+        info.innerHTML = '<a class="profile" href="https://github.com/' + user.login + '">GitHub Profile</a>';
+
+
+        image.innerHTML = '<img src="' + user.avatar_url + '"/>';
+
+
+  } else {
+
+        profile.innerHTML = "<p>No such user!</p>";
+
+        info.innerHTML = "";
+        image.innerHTML = "";
+    // show an error
+
+  }
+
+
 }
+
+/*Now the user variable will contain all the information we need to update the page. Finish the function to:
+
+Display the user’s Github id in #profile h2 - <user login> + ' is GitHub user #' + <user id>
+Add a link to the user’s Github profile in #profile .information. The link should have a class profile
+Add an image in #profile .avatar. To do that, you can use the avatar_url from the response.
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
